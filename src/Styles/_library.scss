@@ -55,10 +55,12 @@
 }
 
 .selected {
-  background: rgb(122, 214, 241);
+  background: rgb(103, 181, 204);
+  transform: scale(0.95);
+  transition: all 0.1s;
 }
 
 .active-library {
-    transform: translateX(0);
-    opacity: 1;
+  transform: translateX(0);
+  opacity: 1;
 }
