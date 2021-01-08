@@ -1,22 +1,35 @@
-import {useState} from 'react'
+import { useState } from "react";
 import "./Styles/app.scss";
 import data from "./util";
 import Player from "./components/Player";
 import Song from "./components/Song";
-import Library from './components/Library'
+import Library from "./components/Library";
+import Nav from "./components/Nav";
 
 function App() {
-
   // State
-  const [songs, setSongs] = useState(data())
-  const [currentSong, setCurrentSong] = useState(songs[0]) // 0 is grabbing the first song from the array of songs.
+  const [songs, setSongs] = useState(data());
+  const [currentSong, setCurrentSong] = useState(songs[0]); // 0 is grabbing the first song from the array of songs.
   const [isPlaying, setIsPlaying] = useState(false);
-  
+  const [libraryStatus, setLibraryStatus] = useState(false);
+
   return (
     <div className="App">
-      <Song currentSong={currentSong}/>
-      <Player isPlaying={isPlaying} setIsPlaying={setIsPlaying} currentSong={currentSong}/>
-      <Library setSongs={setSongs} songs={songs} setCurrentSong={setCurrentSong}/>
+      <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
+      <Song currentSong={currentSong} />
+      <Player
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        currentSong={currentSong}
+        setCurrentSong={setCurrentSong}
+        songs={songs}
+      />
+      <Library
+        setSongs={setSongs}
+        songs={songs}
+        setCurrentSong={setCurrentSong}
+        libraryStatus={libraryStatus}
+      />
     </div>
   );
 }

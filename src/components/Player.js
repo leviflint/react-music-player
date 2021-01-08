@@ -7,7 +7,13 @@ import {
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
+const Player = ({
+  currentSong,
+  isPlaying,
+  setIsPlaying,
+  songs,
+  setCurrentSong,
+}) => {
   // Ref - Can't use querySelector, use ref instead
   const audioRef = useRef(null);
   //Event handlers
@@ -28,10 +34,10 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
   };
 
   const autoPlayHandler = () => {
-      if (isPlaying) {
-          audioRef.current.play();
-      }
-  }
+    if (isPlaying) {
+      audioRef.current.play();
+    }
+  };
 
   const getTime = (time) => {
     return (
@@ -49,21 +55,36 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
     duration: 0,
   });
 
+  const skipTrackHandler = (direction) => {
+    let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+    if (direction === "skip-forward") {
+      setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+    }
+    if (direction === "skip-back") {
+      setCurrentSong(songs[(currentIndex - 1) % songs.length] || songs[songs.length - 1]);
+    }
+  };
+
   return (
     <div className="player">
       <div className="time-control">
         <p>{getTime(songInfo.currentTime)}</p>
         <input
           min={0}
-          max={songInfo.duration}
+          max={songInfo.duration || 0}
           value={songInfo.currentTime}
           onChange={dragHandler}
           type="range"
         />
-        <p>{getTime(songInfo.duration)}</p>
+        <p>{getTime(songInfo.duration || 0)}</p>
       </div>
       <div className="play-control">
-        <FontAwesomeIcon className="skip-back" size="2x" icon={faStepBackward} />
+        <FontAwesomeIcon
+          onClick={() => skipTrackHandler("skip-back")}
+          className="skip-back"
+          size="2x"
+          icon={faStepBackward}
+        />
         <FontAwesomeIcon
           onClick={playSongHandler}
           className="play"
@@ -71,6 +92,7 @@ const Player = ({ currentSong, isPlaying, setIsPlaying }) => {
           icon={isPlaying ? faPause : faPlay} // ? = if, : = else
         />
         <FontAwesomeIcon
+          onClick={() => skipTrackHandler("skip-forward")}
           className="skip-forward"
           size="2x"
           icon={faStepForward}
