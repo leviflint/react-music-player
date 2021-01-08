@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -12,10 +12,27 @@ const Player = ({
   isPlaying,
   setIsPlaying,
   songs,
+  setSongs,
   setCurrentSong,
 }) => {
   // Ref - Can't use querySelector, use ref instead
   const audioRef = useRef(null);
+
+  //Use effect
+  useEffect(() => {
+    const newSongs = songs.map((song) => {
+      if (song.id === currentSong.id) {
+        return { ...song, active: true };
+      } else {
+        return {
+          ...song,
+          active: false,
+        };
+      }
+    });
+    setSongs(newSongs);
+  }, [currentSong]);
+
   //Event handlers
   const playSongHandler = () => {
     if (isPlaying) {
@@ -61,7 +78,9 @@ const Player = ({
       setCurrentSong(songs[(currentIndex + 1) % songs.length]);
     }
     if (direction === "skip-back") {
-      setCurrentSong(songs[(currentIndex - 1) % songs.length] || songs[songs.length - 1]);
+      setCurrentSong(
+        songs[(currentIndex - 1) % songs.length] || songs[songs.length - 1]
+      );
     }
   };
 
